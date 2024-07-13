@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Calculateur de Rentabilité</title>
+<style>
+  body {
+    background-image: url('background.jpg');
+    font-family: Arial, sans-serif;
+    padding: 0pt;
+    font-size: 11pt;
+}
+  img {
+  width:150px;
+  height: 150px;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: auto; 
+}
+  #loginContainer {
+    border-radius: 3px;
+    background-color: rgb(252, 255, 254);
+    border: 5px solid #b709ec;
+    padding: 5px;
+    width: 400px; height: 350px;
+    margin: auto;
+    text-align: center; color: #020200; 
+    background-color: #ffffff;
+  }
+  .container {
+    max-width: 350px;
+    margin: auto;
+    background: rgb(123, 211, 238);
+    padding: 8pt;
+    border-radius: 8px;
+    color: rgb(3, 3, 7); font-size: x-large; 
+    display: none;   
+    text-align: auto;
+  }
+  button {
+    color: rgb(255, 255, 255); background-color: rgb(219, 9, 209);
+    border-color: #b709ec; size: 3px;
+    width: auto;
+    padding: 5pt;
+    margin: auto;   
+  }
+  input {
+    color: #000000; background-color: rgb(255, 255, 255);
+    border-color:#b709ec; size: 6px;
+    width: 65%;
+    padding: 10pt;
+    font-size: 16pt;
+    margin: auto;  
+   }
+  .resultat {
+    font-weight: rgb(172, 133, 5);
+    color: #000000;
+  }
+</style>
+</head>
+<body>
+<div id="loginContainer">
+  <h2>Bienvenue dans le calculateur de rentabilité développé par Numériques Services!</h2> 
+  <a href="https://sites.google.com/view/numriquesservicescom">Visitez le site de Numériques Services</a>
+  <img src="D:\Clé de Gestion.png" alt="logo de Clé de Gestion" class="center">
+  <input type="password" id="password" placeholder="Entrez le mot de passe">
+  <button onclick="verifierMotDePasse()">Connexion</button>
+</div>
+
+<div class="container">
+  <h2>Calculateur de Rentabilité de Projet</h2>
+  <label for="chiffreAffaires">Chiffre d'affaires:</label>
+  <input type="number" id="chiffreAffaires" placeholder="Entrez le chiffre d'affaires">
+  
+  <label for="chargesVariables">Charges variables:</label>
+  <input type="number" id="chargesVariables" placeholder="Entrez les charges variables">
+  
+  <label for="chargesFixes">Charges fixes:</label>
+  <input type="number" id="chargesFixes" placeholder="Entrez les charges fixes">
+  
+  <button onclick="calculerIndicateurs()">Calculer les Indicateurs</button>
+  <div id="resultat"></div>
+</div>
+
+<script>
+  var motDePasseCorrect = 'Samba56'; // Mot de passe pour l'accès
+
+  function verifierMotDePasse() {
+    var motDePasse = document.getElementById('password').value;
+    if(motDePasse === motDePasseCorrect) {
+      document.getElementById('loginContainer').style.display = 'none';
+      document.querySelector('.container').style.display = 'block';
+    } else {
+      alert('Mot de passe incorrect!');
+    }
+  }
+
+  function calculerIndicateurs() {
+    var chiffreAffaires = parseFloat(document.getElementById('chiffreAffaires').value);
+    var chargesVariables = parseFloat(document.getElementById('chargesVariables').value);
+    var chargesFixes = parseFloat(document.getElementById('chargesFixes').value);
+    
+    var margeSurChargesVariables = chiffreAffaires - chargesVariables;
+    var resultat = margeSurChargesVariables - chargesFixes;
+    var tauxDeMarge = (margeSurChargesVariables / chiffreAffaires) * 100;
+    var seuilDeRentabilite = chargesFixes / (tauxDeMarge / 100);
+    var pointMort = (seuilDeRentabilite / chiffreAffaires) * 12;
+    var margeDeSecurite = chiffreAffaires - seuilDeRentabilite;
+    var indiceDeSecurite = (margeDeSecurite / chiffreAffaires);
+    var tauxDeRentabilite = (resultat / chiffreAffaires) * 100;
+    
+    var resultatHTML = '<p class="resultat">Résultat: ' + resultat.toFixed(2) + ' Fcfa</p>' +
+      '<p class="resultat">Taux de marge: ' + tauxDeMarge.toFixed(2) + '%</p>' +
+      '<p class="resultat">Seuil de rentabilité: ' + seuilDeRentabilite.toFixed(2) + ' Fcfa</p>' +
+      '<p class="resultat">Point mort (mois): ' + pointMort.toFixed(2) + '</p>' +
+      '<p class="resultat">Marge de sécurité: ' + margeDeSecurite.toFixed(2) + ' Fcfa</p>' +
+      '<p class="resultat">Indice de sécurité: ' + indiceDeSecurite.toFixed(2) + '%</p>' +
+      '<p class="resultat">Taux de rentabilité: ' + tauxDeRentabilite.toFixed(2) + '%</p>' +
+      '<p>Interprétation:</p>' +
+      '<p>Le chiffre d\'affaires qui vous permet de faire ni bénéfice ni perte est de: <span class="resultat">.' + seuilDeRentabilite.toFixed(2) + ' Fcfa</span> Cela traduit votre seuil de rentabilité. Si votre chiffre d\'affaire est égal avec ce seuil,vous ne pouvez pas dégager des bénéfices mais aussi vous ne subissez pas de pertes ce qui signifie que votre résultat sera égal à 0 Fcfa.</p>' + 
+      '<p>Le nombre de mois qu\'il vous faut pour atteindre le seuil de rentabilité est de: <span class="resultat">' + pointMort.toFixed(2) + '</span></p>' +
+      '<p>Votre chiffre d\'affaires peut baisser de: <span class="resultat">' + margeDeSecurite.toFixed(2) + ' Fcfa</span> sans que vous subissez des pertes.</p>';
+    
+    document.getElementById('resultat').innerHTML = resultatHTML;
+  }
+</script>
+</body>
+</html>
